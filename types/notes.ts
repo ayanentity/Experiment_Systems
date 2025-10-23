@@ -12,13 +12,13 @@ export const NOTE_CONFIG: Record<
   MusicalNote,
   { label: string; filename: string }
 > = {
-  [MusicalNote.DO]: { label: "ド", filename: "do.wav" },
-  [MusicalNote.RE]: { label: "レ", filename: "re.wav" },
-  [MusicalNote.MI]: { label: "ミ", filename: "mi.wav" },
-  [MusicalNote.FA]: { label: "ファ", filename: "fa.wav" },
-  [MusicalNote.SO]: { label: "ソ", filename: "so.wav" },
-  [MusicalNote.LA]: { label: "ラ", filename: "la.wav" },
-  [MusicalNote.SI]: { label: "シ", filename: "si.wav" },
+  [MusicalNote.DO]: { label: "ド", filename: "a.wav" },
+  [MusicalNote.RE]: { label: "レ", filename: "b.wav" },
+  [MusicalNote.MI]: { label: "ミ", filename: "c.wav" },
+  [MusicalNote.FA]: { label: "ファ", filename: "d.wav" },
+  [MusicalNote.SO]: { label: "ソ", filename: "e.wav" },
+  [MusicalNote.LA]: { label: "ラ", filename: "f.wav" },
+  [MusicalNote.SI]: { label: "シ", filename: "g.wav" },
 };
 
 export const ALL_NOTES = [
