@@ -58,7 +58,9 @@ export default function Home() {
   const checkAnswer = (answer: MusicalNote[]) => {
     const isCorrect =
       answer.length === currentQuestion.correctAnswer.length &&
-      answer.every((note, index) => note === currentQuestion.correctAnswer[index]);
+      answer.every(
+        (note, index) => note === currentQuestion.correctAnswer[index]
+      );
 
     setQuizState(isCorrect ? "correct" : "incorrect");
 
@@ -99,7 +101,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col items-center gap-6 w-full">
-          <div className="relative w-full max-w-2xl aspect-[3/1] bg-zinc-100 dark:bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-200 dark:border-zinc-800">
+          <div className="relative w-full max-w-2xl aspect-3/1 bg-zinc-100 dark:bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-200 dark:border-zinc-800">
             <Image
               src={currentQuestion.imagePath}
               alt="楽譜の問題"
@@ -134,7 +136,10 @@ export default function Home() {
                 正解！
               </p>
               <p className="text-sm text-green-600 dark:text-green-300">
-                正解: {currentQuestion.correctAnswer.map((n) => NOTE_CONFIG[n].label).join(" → ")}
+                正解:{" "}
+                {currentQuestion.correctAnswer
+                  .map((n) => NOTE_CONFIG[n].label)
+                  .join(" → ")}
               </p>
             </div>
           )}
@@ -145,10 +150,14 @@ export default function Home() {
                 不正解
               </p>
               <p className="text-sm text-red-600 dark:text-red-300">
-                あなたの回答: {userAnswer.map((n) => NOTE_CONFIG[n].label).join(" → ")}
+                あなたの回答:{" "}
+                {userAnswer.map((n) => NOTE_CONFIG[n].label).join(" → ")}
               </p>
               <p className="text-sm text-red-600 dark:text-red-300">
-                正解: {currentQuestion.correctAnswer.map((n) => NOTE_CONFIG[n].label).join(" → ")}
+                正解:{" "}
+                {currentQuestion.correctAnswer
+                  .map((n) => NOTE_CONFIG[n].label)
+                  .join(" → ")}
               </p>
             </div>
           )}
