@@ -1,3 +1,7 @@
+/**
+ * 音階のenum定義
+ * ド(DO)からシ(SI)までの7音階と休符(REST)
+ */
 export enum MusicalNote {
   DO = "do",
   RE = "re",
@@ -6,9 +10,13 @@ export enum MusicalNote {
   SO = "so",
   LA = "la",
   SI = "si",
-  REST = "rest",
+  REST = "rest", // 休符（無音）
 }
 
+/**
+ * 各音階の表示ラベルと音声ファイル名の設定
+ * Record型で全ての音階に対する設定を保証
+ */
 export const NOTE_CONFIG: Record<
   MusicalNote,
   { label: string; filename: string }
@@ -20,9 +28,13 @@ export const NOTE_CONFIG: Record<
   [MusicalNote.SO]: { label: "ソ", filename: "g.wav" },
   [MusicalNote.LA]: { label: "ラ", filename: "a.wav" },
   [MusicalNote.SI]: { label: "シ", filename: "b.wav" },
-  [MusicalNote.REST]: { label: "休符", filename: "" },
+  [MusicalNote.REST]: { label: "休符", filename: "" }, // 休符は音声ファイルなし
 };
 
+/**
+ * UIに表示する音階のリスト（休符は含まない）
+ * ユーザーが選択できるボタンとして表示される
+ */
 export const ALL_NOTES = [
   MusicalNote.DO,
   MusicalNote.RE,
