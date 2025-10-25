@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { COURSES } from "@/types/course";
 
 /**
@@ -26,52 +25,11 @@ export default function Home() {
           {COURSES.map((course) => (
             <Link key={course.id} href={course.path}>
               <div className="group relative overflow-hidden rounded-lg border-2 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 transition-all hover:border-zinc-400 dark:hover:border-zinc-600 hover:shadow-lg cursor-pointer">
-                {/* 難易度バッジ */}
-                <div className="absolute top-4 right-4">
-                  <div className="flex gap-1">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-2 h-2 rounded-full ${
-                          i < course.difficulty
-                            ? "bg-blue-500"
-                            : "bg-zinc-300 dark:bg-zinc-700"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
                 {/* コース情報 */}
                 <div className="flex flex-col gap-3">
                   <h2 className="text-2xl font-bold text-black dark:text-zinc-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {course.name}
                   </h2>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                    {course.description}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-500">
-                      問題数: {course.questionCount}問
-                    </span>
-                  </div>
-                </div>
-
-                {/* ホバー時の矢印 */}
-                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg
-                    className="w-5 h-5 text-blue-600 dark:text-blue-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
                 </div>
               </div>
             </Link>

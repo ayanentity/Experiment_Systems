@@ -80,12 +80,10 @@ export function SingleNoteQuizPlayer({
     // 正解の場合はカウントアップ
     if (isCorrect) {
       setCorrectCount(correctCount + 1);
-    } else {
-      // 不正解の場合は1秒後に正解の音を再生
-      setTimeout(() => {
-        playCorrectAnswer();
-      }, 1000);
     }
+    setTimeout(() => {
+      playCorrectAnswer();
+    }, 1000);
   };
 
   /**
@@ -165,7 +163,7 @@ export function SingleNoteQuizPlayer({
             onClick={() => handleNoteClick(note)}
             variant="default"
             size="lg"
-            className="min-w-[80px] h-16 text-lg font-semibold"
+            className="min-w-[80px] h-16 text-lg font-semibold active:scale-95 transition-transform"
             disabled={quizState !== "answering"}
           >
             {NOTE_CONFIG[note].label}

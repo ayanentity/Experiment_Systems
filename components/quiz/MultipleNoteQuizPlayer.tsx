@@ -239,9 +239,9 @@ export function MultipleNoteQuizPlayer({
           <Button
             key={note}
             onClick={() => handleNoteClick(note)}
-            variant={userAnswer.includes(note) ? "secondary" : "default"}
+            variant="default"
             size="lg"
-            className="min-w-[80px] h-16 text-lg font-semibold"
+            className="min-w-[80px] h-16 text-lg font-semibold active:scale-95 transition-transform"
             disabled={quizState !== "answering"}
           >
             {NOTE_CONFIG[note].label}
