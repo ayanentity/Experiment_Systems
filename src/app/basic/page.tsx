@@ -1,20 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { MultipleNoteQuizPlayer } from "@/components/quiz/MultipleNoteQuizPlayer";
-import { FINAL_QUESTION } from "@/types/finalQuiz";
+import { QuizPlayer } from "@/src/ui/components/organisms/QuizPlayer";
+import { SingleNoteQuestionRepository } from "@/src/infrastructure/repositories/QuestionRepository";
 
 /**
- * 最終コースページ
- * 1問のみ、約20音の長いフレーズ、休符あり
+ * 基礎コースページ
+ * 全14問、7つの音階が各2回ずつ順不同で出題
  */
-export default function FinalCoursePage() {
-  // クイズが完了したかどうかの状態
+export default function BasicCoursePage() {
   const [isCompleted, setIsCompleted] = useState(false);
 
-  // クイズ完了時の処理
+  // 問題を生成（各音階2回ずつ = 14問）
+  const questions = useMemo(() => {
+    const repository = new SingleNoteQuestionRepository();
+    return repository.generate(2);
+  }, []);
+
   const handleComplete = () => {
     setIsCompleted(true);
   };
@@ -25,15 +29,12 @@ export default function FinalCoursePage() {
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
         <main className="flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 py-16 px-8 bg-white dark:bg-black">
           <div className="flex flex-col items-center gap-6 text-center">
-            <div className="text-6xl">🏆</div>
-            <h1 className="text-5xl font-bold text-black dark:text-zinc-50">
-              全コース完了！
+            <div className="text-6xl">🎉</div>
+            <h1 className="text-4xl font-bold text-black dark:text-zinc-50">
+              基礎コース完了！
             </h1>
-            <p className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 font-bold">
-              おめでとうございます！
-            </p>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 mt-4">
-              20音の長いフレーズをクリアしました！
+            <p className="text-lg text-zinc-600 dark:text-zinc-400">
+              お疲れ様でした！
             </p>
           </div>
 
@@ -56,16 +57,9 @@ export default function FinalCoursePage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 py-16 px-8 bg-white dark:bg-black">
-        {/* 注意書き */}
-        <div className="w-full max-w-2xl p-4 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg">
-          <p className="text-sm text-yellow-800 dark:text-yellow-200 text-center">
-            ⚠️ 最終課題：20音の長いフレーズです。集中して挑戦しましょう！
-          </p>
-        </div>
-
-        <MultipleNoteQuizPlayer
-          questions={[FINAL_QUESTION]}
-          courseName="最終コース"
+        <QuizPlayer
+          questions={questions}
+          courseName="基礎コース"
           onComplete={handleComplete}
         />
 

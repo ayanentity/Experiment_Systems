@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { COURSES } from "@/types/course";
+import { COURSES } from "@/src/infrastructure/data/CourseData";
 
 /**
  * メインページ - コース選択画面
@@ -30,6 +30,9 @@ export default function Home() {
                   <h2 className="text-2xl font-bold text-black dark:text-zinc-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {course.name}
                   </h2>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                    {course.questionCount}問
+                  </p>
                 </div>
               </div>
             </Link>
