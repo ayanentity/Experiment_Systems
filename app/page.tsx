@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MusicalNote, NOTE_CONFIG, ALL_NOTES } from "@/types/notes";
 import { QUIZ_QUESTIONS, QuizState } from "@/types/quiz";
@@ -29,24 +29,27 @@ export default function Home() {
 
   const playCorrectAnswer = async () => {
     for (const note of currentQuestion.correctAnswer) {
-      await new Promise((resolve) => {
+      if (note === MusicalNote.REST) {
+        // 休符の場合は何も再生せず待つだけ
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } else {
         const audio = audioRefs.current[note];
         if (audio) {
           audio.currentTime = 0;
           audio.play();
-          audio.onended = () => resolve(null);
-        } else {
-          resolve(null);
         }
-      });
-      await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
     }
   };
 
   const handleNoteClick = (note: MusicalNote) => {
     if (quizState !== "answering") return;
 
-    playNote(note);
+    // 休符以外は音を鳴らす
+    if (note !== MusicalNote.REST) {
+      playNote(note);
+    }
     const newAnswer = [...userAnswer, note];
     setUserAnswer(newAnswer);
 
@@ -64,11 +67,9 @@ export default function Home() {
 
     setQuizState(isCorrect ? "correct" : "incorrect");
 
-    if (!isCorrect) {
-      setTimeout(() => {
-        playCorrectAnswer();
-      }, 500);
-    }
+    setTimeout(() => {
+      playCorrectAnswer();
+    }, 1000);
   };
 
   const handleNextQuestion = () => {

@@ -6,19 +6,21 @@ export enum MusicalNote {
   SO = "so",
   LA = "la",
   SI = "si",
+  REST = "rest",
 }
 
 export const NOTE_CONFIG: Record<
   MusicalNote,
   { label: string; filename: string }
 > = {
-  [MusicalNote.DO]: { label: "ド", filename: "a.wav" },
-  [MusicalNote.RE]: { label: "レ", filename: "b.wav" },
-  [MusicalNote.MI]: { label: "ミ", filename: "c.wav" },
-  [MusicalNote.FA]: { label: "ファ", filename: "d.wav" },
-  [MusicalNote.SO]: { label: "ソ", filename: "e.wav" },
-  [MusicalNote.LA]: { label: "ラ", filename: "f.wav" },
-  [MusicalNote.SI]: { label: "シ", filename: "g.wav" },
+  [MusicalNote.DO]: { label: "ド", filename: "c.wav" },
+  [MusicalNote.RE]: { label: "レ", filename: "d.wav" },
+  [MusicalNote.MI]: { label: "ミ", filename: "e.wav" },
+  [MusicalNote.FA]: { label: "ファ", filename: "f.wav" },
+  [MusicalNote.SO]: { label: "ソ", filename: "g.wav" },
+  [MusicalNote.LA]: { label: "ラ", filename: "a.wav" },
+  [MusicalNote.SI]: { label: "シ", filename: "b.wav" },
+  [MusicalNote.REST]: { label: "休符", filename: "" },
 };
 
 export const ALL_NOTES = [
