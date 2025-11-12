@@ -7,7 +7,11 @@ import { NoteButtonGroup } from "../molecules/NoteButtonGroup";
 import { ResultDisplay } from "../molecules/ResultDisplay";
 import { useQuizPresenter } from "../../../presentation/hooks/useQuizPresenter";
 import { Question, SingleNoteQuestion } from "../../../domain/models/Question";
-import { ALL_NOTES, NOTE_CONFIG } from "../../../domain/models/MusicalNote";
+import {
+  ALL_NOTES,
+  NOTE_CONFIG,
+  MusicalNote,
+} from "../../../domain/models/MusicalNote";
 
 /**
  * クイズプレイヤーのProps
@@ -21,7 +25,11 @@ interface QuizPlayerProps {
 /**
  * クイズプレイヤーコンポーネント（Organism）
  */
-export function QuizPlayer({ questions, courseName, onComplete }: QuizPlayerProps) {
+export function QuizPlayer({
+  questions,
+  courseName,
+  onComplete,
+}: QuizPlayerProps) {
   const {
     currentQuestion,
     userAnswer,
@@ -46,7 +54,35 @@ export function QuizPlayer({ questions, courseName, onComplete }: QuizPlayerProp
 
   // 正解の音符配列を取得
   const correctAnswer =
-    "note" in currentQuestion ? [currentQuestion.note] : currentQuestion.correctAnswer;
+    "note" in currentQuestion
+      ? [currentQuestion.note]
+      : currentQuestion.correctAnswer;
+
+  // 単音問題の画像パスを状態に応じて切り替える
+  const getSingleNoteImagePath = (note: MusicalNote) => {
+    const map: Record<MusicalNote, string> = {
+      [MusicalNote.LA]: "a",
+      [MusicalNote.SI]: "b",
+      [MusicalNote.DO]: "c",
+      [MusicalNote.RE]: "d",
+      [MusicalNote.MI]: "e",
+      [MusicalNote.FA]: "f",
+      [MusicalNote.SO]: "g",
+      [MusicalNote.REST]: "", // 使用しない
+    };
+    const base = map[note];
+    if (!base) return "";
+    if (state === "answering") {
+      return `/question/singletone/${base}.png`;
+    }
+    return `/question/singletoneAnswer/${base}_answer.png`;
+  };
+
+  // 表示する画像パスを決定
+  const displayImageSrc =
+    "note" in currentQuestion
+      ? getSingleNoteImagePath(currentQuestion.note)
+      : currentQuestion.imagePath;
 
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
@@ -62,7 +98,7 @@ export function QuizPlayer({ questions, courseName, onComplete }: QuizPlayerProp
       <div className="flex flex-col items-center gap-6 w-full">
         <div className="relative w-full max-w-2xl aspect-3/1 bg-zinc-100 dark:bg-zinc-900 rounded-lg overflow-hidden border-2 border-zinc-200 dark:border-zinc-800">
           <Image
-            src={currentQuestion.imagePath}
+            src={displayImageSrc}
             alt="楽譜の問題"
             fill
             className="object-contain"

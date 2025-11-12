@@ -14,10 +14,22 @@ export class SingleNoteQuestionRepository {
    * @returns 生成された問題配列
    */
   generate(repeatCount: number): SingleNoteQuestion[] {
-    return this.generateUseCase.execute(
-      repeatCount,
-      (note) => `/images/single/${note}.png`
-    );
+    return this.generateUseCase.execute(repeatCount, (note) => {
+      // 楽譜画像は public/question/singletone/{a|b|c|d|e|f|g}.png を使用
+      // MusicalNote とファイル名の対応（固定ド）
+      const map: Record<MusicalNote, string> = {
+        [MusicalNote.LA]: "a",
+        [MusicalNote.SI]: "b",
+        [MusicalNote.DO]: "c",
+        [MusicalNote.RE]: "d",
+        [MusicalNote.MI]: "e",
+        [MusicalNote.FA]: "f",
+        [MusicalNote.SO]: "g",
+        [MusicalNote.REST]: "", // 休符は単音問題では使用しない
+      };
+      const filename = map[note];
+      return `/question/singletone/${filename}.png`;
+    });
   }
 }
 
