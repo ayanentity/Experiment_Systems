@@ -31,7 +31,7 @@ export default function FinalCoursePage() {
             <h1 className="text-5xl font-bold text-black dark:text-zinc-50">
               全コース完了！
             </h1>
-            <p className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 font-bold">
+            <p className="text-2xl text-transparent bg-clip-text bg-gradient-to-rz from-yellow-400 via-orange-500 to-red-500 font-bold">
               おめでとうございます！
             </p>
             <p className="text-lg text-zinc-600 dark:text-zinc-400 mt-4">
