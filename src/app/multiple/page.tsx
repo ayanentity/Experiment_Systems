@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { QuizPlayer } from "@/src/ui/components/organisms/QuizPlayer";
+import { QuizResultView } from "@/src/ui/components/organisms/QuizResultView";
 import { MultipleNoteQuestionRepository } from "@/src/infrastructure/repositories/QuestionRepository";
+import { QuizResultRepository } from "@/src/infrastructure/storage/QuizResultRepository";
+import { QuizResult } from "@/src/domain/models/QuizResult";
 
 /**
  * 複音コースページ
@@ -12,6 +15,9 @@ import { MultipleNoteQuestionRepository } from "@/src/infrastructure/repositorie
  */
 export default function MultipleCoursePage() {
   const [isCompleted, setIsCompleted] = useState(false);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+
+  const courseName = "複音コース";
 
   // 複音問題を取得
   const repository = new MultipleNoteQuestionRepository();
@@ -21,34 +27,23 @@ export default function MultipleCoursePage() {
     setIsCompleted(true);
   };
 
-  // クイズ完了後の結果画面
-  if (isCompleted) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-        <main className="flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 py-16 px-8 bg-white dark:bg-black">
-          <div className="flex flex-col items-center gap-6 text-center">
-            <div className="text-6xl">🎉</div>
-            <h1 className="text-4xl font-bold text-black dark:text-zinc-50">
-              複音コース完了！
-            </h1>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400">
-              お疲れ様でした！
-            </p>
-          </div>
+  // クイズ完了時にローカルストレージから結果を読み込む
+  useEffect(() => {
+    if (isCompleted) {
+      const repository = new QuizResultRepository();
+      const result = repository.getByCourseName(courseName);
+      setQuizResult(result);
+    }
+  }, [isCompleted]);
 
-          <div className="flex gap-4">
-            <Button onClick={() => setIsCompleted(false)} size="lg">
-              もう一度挑戦
-            </Button>
-            <Link href="/">
-              <Button variant="outline" size="lg">
-                コース選択に戻る
-              </Button>
-            </Link>
-          </div>
-        </main>
-      </div>
-    );
+  const handleRetry = () => {
+    setIsCompleted(false);
+    setQuizResult(null);
+  };
+
+  // クイズ完了後の結果画面
+  if (isCompleted && quizResult) {
+    return <QuizResultView result={quizResult} onRetry={handleRetry} />;
   }
 
   // クイズプレイ画面
@@ -57,7 +52,7 @@ export default function MultipleCoursePage() {
       <main className="flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-8 py-16 px-8 bg-white dark:bg-black">
         <QuizPlayer
           questions={questions}
-          courseName="複音コース"
+          courseName={courseName}
           onComplete={handleComplete}
         />
 
