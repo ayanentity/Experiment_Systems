@@ -38,6 +38,7 @@ export function QuizPlayer({
     progress,
     total,
     isMultiNote,
+    isCompleted,
     requiredAnswerCount,
     handleNoteClick,
     handleNext,
@@ -45,12 +46,6 @@ export function QuizPlayer({
     setAudioRef,
     getAudioPath,
   } = useQuizPresenter(questions);
-
-  // 問題が変わったらonCompleteをチェック
-  if (progress > total) {
-    onComplete();
-    return null;
-  }
 
   // 正解の音符配列を取得
   const correctAnswer =
@@ -154,7 +149,16 @@ export function QuizPlayer({
           </Button>
         )}
         {state !== "answering" && (
-          <Button onClick={handleNext} size="lg">
+          <Button
+            onClick={() => {
+              if (isCompleted) {
+                onComplete();
+              } else {
+                handleNext();
+              }
+            }}
+            size="lg"
+          >
             {progress < total ? "次の問題" : "結果を見る"}
           </Button>
         )}
