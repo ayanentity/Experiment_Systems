@@ -12,6 +12,7 @@ import {
   NOTE_CONFIG,
   MusicalNote,
 } from "../../../domain/models/MusicalNote";
+import { QuizResultRepository } from "../../../infrastructure/storage/QuizResultRepository";
 
 /**
  * クイズプレイヤーのProps
@@ -43,9 +44,10 @@ export function QuizPlayer({
     handleNoteClick,
     handleNext,
     handleReset,
+    getQuizResult,
     setAudioRef,
     getAudioPath,
-  } = useQuizPresenter(questions);
+  } = useQuizPresenter(questions, courseName);
 
   // 正解の音符配列を取得
   const correctAnswer =
@@ -152,6 +154,12 @@ export function QuizPlayer({
           <Button
             onClick={() => {
               if (isCompleted) {
+                // ローカルストレージに保存
+                const repository = new QuizResultRepository();
+                const quizResult = getQuizResult();
+                repository.save(quizResult);
+
+                // 結果画面に遷移
                 onComplete();
               } else {
                 handleNext();

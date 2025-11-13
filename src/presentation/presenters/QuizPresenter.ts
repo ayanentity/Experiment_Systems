@@ -63,6 +63,9 @@ export class QuizPresenter {
       this.viewModel.incrementCorrectCount();
     }
 
+    // 回答結果を記録
+    this.viewModel.recordCurrentQuestionResult(result.isCorrect);
+
     // 正解音声を再生
     setTimeout(() => {
       this.playCorrectAnswer();
