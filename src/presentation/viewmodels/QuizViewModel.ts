@@ -1,5 +1,6 @@
 import { MusicalNote } from "../../domain/models/MusicalNote";
 import { Question, QuizState, SingleNoteQuestion } from "../../domain/models/Question";
+import { QuizResult, QuestionResult } from "../../domain/models/QuizResult";
 
 /**
  * クイズのビューモデル（状態管理）
@@ -15,9 +16,12 @@ export class QuizViewModel {
   correctCount: number = 0;
   // クイズ完了フラグ
   isCompleted: boolean = false;
+  // 各問題の回答履歴
+  private questionResults: QuestionResult[] = [];
 
   constructor(
     public questions: Question[] | SingleNoteQuestion[],
+    private courseName: string,
     private onStateChange: () => void
   ) {}
 
@@ -114,5 +118,34 @@ export class QuizViewModel {
   complete() {
     this.isCompleted = true;
     this.onStateChange();
+  }
+
+  /**
+   * 現在の問題の回答結果を記録
+   */
+  recordCurrentQuestionResult(isCorrect: boolean) {
+    const question = this.currentQuestion;
+    const correctAnswer =
+      "note" in question ? [question.note] : question.correctAnswer;
+
+    this.questionResults.push({
+      questionIndex: this.currentQuestionIndex,
+      correctAnswer,
+      userAnswer: [...this.userAnswer],
+      isCorrect,
+    });
+  }
+
+  /**
+   * クイズ結果を取得
+   */
+  getQuizResult(): QuizResult {
+    return {
+      courseName: this.courseName,
+      completedAt: new Date().toISOString(),
+      totalQuestions: this.questions.length,
+      correctCount: this.correctCount,
+      questions: this.questionResults,
+    };
   }
 }

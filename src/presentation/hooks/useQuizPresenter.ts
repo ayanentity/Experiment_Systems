@@ -8,16 +8,19 @@ import { MusicalNote } from "../../domain/models/MusicalNote";
 /**
  * クイズプレゼンターを使用するカスタムフック
  */
-export function useQuizPresenter(questions: Question[] | SingleNoteQuestion[]) {
+export function useQuizPresenter(
+  questions: Question[] | SingleNoteQuestion[],
+  courseName: string
+) {
   // 再レンダリングをトリガーするための状態
   const [, forceUpdate] = useState({});
 
   // ビューモデルを作成
   const viewModel = useMemo(() => {
-    return new QuizViewModel(questions, () => {
+    return new QuizViewModel(questions, courseName, () => {
       forceUpdate({});
     });
-  }, [questions]);
+  }, [questions, courseName]);
 
   // オーディオプレイヤーを作成
   const audioPlayer = useMemo(() => new AudioPlayer(), []);
@@ -53,6 +56,9 @@ export function useQuizPresenter(questions: Question[] | SingleNoteQuestion[]) {
     handleNext: () => presenter.handleNext(),
     handleReset: () => presenter.handleReset(),
     handleComplete: () => presenter.handleComplete(),
+
+    // 結果取得
+    getQuizResult: () => viewModel.getQuizResult(),
 
     // オーディオ
     setAudioRef,
