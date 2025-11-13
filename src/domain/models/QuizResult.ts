@@ -8,6 +8,7 @@ export interface QuestionResult {
   correctAnswer: MusicalNote[];
   userAnswer: MusicalNote[];
   isCorrect: boolean;
+  responseTimesMs: number[]; // 各回答までの時間（ミリ秒）の配列
 }
 
 /**
@@ -19,4 +20,6 @@ export interface QuizResult {
   totalQuestions: number;
   correctCount: number;
   questions: QuestionResult[];
+  averageResponseTimeMs: number; // 平均回答時間（ミリ秒）
+  totalTimeMs: number; // 全体にかかった時間（ミリ秒）
 }

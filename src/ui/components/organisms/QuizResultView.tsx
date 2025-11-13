@@ -11,10 +11,25 @@ interface QuizResultViewProps {
 }
 
 /**
+ * 時間を秒数に変換してフォーマット
+ */
+function formatTime(ms: number): string {
+  const seconds = (ms / 1000).toFixed(1);
+  return `${seconds}秒`;
+}
+
+/**
  * クイズ結果表示コンポーネント
  */
 export function QuizResultView({ result, onRetry }: QuizResultViewProps) {
-  const { courseName, totalQuestions, correctCount, questions } = result;
+  const {
+    courseName,
+    totalQuestions,
+    correctCount,
+    questions,
+    averageResponseTimeMs,
+    totalTimeMs,
+  } = result;
   const incorrectCount = totalQuestions - correctCount;
   const accuracy = Math.round((correctCount / totalQuestions) * 100);
 
@@ -61,6 +76,26 @@ export function QuizResultView({ result, onRetry }: QuizResultViewProps) {
             </div>
           </div>
 
+          {/* 時間情報 */}
+          <div className="grid grid-cols-2 gap-4 w-full max-w-md mt-2">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">
+                {formatTime(averageResponseTimeMs)}
+              </div>
+              <div className="text-sm text-blue-600 dark:text-blue-500">
+                平均回答時間
+              </div>
+            </div>
+            <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+              <div className="text-2xl font-bold text-purple-700 dark:text-purple-400">
+                {formatTime(totalTimeMs)}
+              </div>
+              <div className="text-sm text-purple-600 dark:text-purple-500">
+                合計時間
+              </div>
+            </div>
+          </div>
+
           {/* 間違えた問題の詳細 */}
           {incorrectQuestions.length > 0 && (
             <div className="w-full max-w-2xl mt-8">
@@ -68,16 +103,25 @@ export function QuizResultView({ result, onRetry }: QuizResultViewProps) {
                 間違えた問題
               </h2>
               <div className="flex flex-col gap-3">
-                {incorrectQuestions.map((question) => (
-                  <div
-                    key={question.questionIndex}
-                    className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                        問題 {question.questionIndex + 1}
+                {incorrectQuestions.map((question) => {
+                  const totalResponseTime = question.responseTimesMs.reduce(
+                    (sum, time) => sum + time,
+                    0
+                  );
+                  return (
+                    <div
+                      key={question.questionIndex}
+                      className="bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="text-sm text-zinc-600 dark:text-zinc-400">
+                          問題 {question.questionIndex + 1}
+                        </div>
+                        <div className="text-xs text-zinc-500 dark:text-zinc-500">
+                          回答時間: {formatTime(totalResponseTime)}
+                        </div>
                       </div>
-                      <div className="flex gap-4 text-sm">
+                      <div className="flex flex-col gap-2 text-sm">
                         <div>
                           <span className="text-zinc-600 dark:text-zinc-400">
                             正解:{" "}
@@ -98,10 +142,18 @@ export function QuizResultView({ result, onRetry }: QuizResultViewProps) {
                               .join(", ")}
                           </span>
                         </div>
+                        {question.responseTimesMs.length > 1 && (
+                          <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">
+                            各回答時間:{" "}
+                            {question.responseTimesMs
+                              .map((time) => formatTime(time))
+                              .join(" → ")}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

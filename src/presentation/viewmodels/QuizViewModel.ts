@@ -18,12 +18,19 @@ export class QuizViewModel {
   isCompleted: boolean = false;
   // 各問題の回答履歴
   private questionResults: QuestionResult[] = [];
+  // 時間測定用
+  private questionStartTime: number = 0; // 問題開始時刻
+  private lastAnswerTime: number = 0; // 前回の回答時刻
+  private currentResponseTimes: number[] = []; // 現在の問題の各回答時間
+  private quizStartTime: number = Date.now(); // クイズ全体の開始時刻
 
   constructor(
     public questions: Question[] | SingleNoteQuestion[],
     private courseName: string,
     private onStateChange: () => void
-  ) {}
+  ) {
+    this.startQuestionTimer();
+  }
 
   /**
    * 現在の問題を取得
@@ -68,6 +75,15 @@ export class QuizViewModel {
    * 回答を追加
    */
   addAnswer(note: MusicalNote) {
+    // 回答時間を記録
+    const now = Date.now();
+    const timeFromStart = this.lastAnswerTime === 0
+      ? now - this.questionStartTime  // 1つ目の回答: 問題開始からの時間
+      : now - this.lastAnswerTime;    // 2つ目以降: 前回の回答からの時間
+
+    this.currentResponseTimes.push(timeFromStart);
+    this.lastAnswerTime = now;
+
     this.userAnswer = [...this.userAnswer, note];
     this.onStateChange();
   }
@@ -77,6 +93,8 @@ export class QuizViewModel {
    */
   resetAnswer() {
     this.userAnswer = [];
+    this.currentResponseTimes = [];
+    this.lastAnswerTime = 0;
     this.state = "answering";
     this.onStateChange();
   }
@@ -105,6 +123,8 @@ export class QuizViewModel {
       this.currentQuestionIndex++;
       this.userAnswer = [];
       this.state = "answering";
+      // 次の問題のタイマーを開始
+      this.startQuestionTimer();
       this.onStateChange();
     } else {
       this.isCompleted = true;
@@ -121,6 +141,15 @@ export class QuizViewModel {
   }
 
   /**
+   * 問題のタイマーを開始
+   */
+  private startQuestionTimer() {
+    this.questionStartTime = Date.now();
+    this.lastAnswerTime = 0;
+    this.currentResponseTimes = [];
+  }
+
+  /**
    * 現在の問題の回答結果を記録
    */
   recordCurrentQuestionResult(isCorrect: boolean) {
@@ -133,6 +162,7 @@ export class QuizViewModel {
       correctAnswer,
       userAnswer: [...this.userAnswer],
       isCorrect,
+      responseTimesMs: [...this.currentResponseTimes],
     });
   }
 
@@ -140,12 +170,24 @@ export class QuizViewModel {
    * クイズ結果を取得
    */
   getQuizResult(): QuizResult {
+    const totalTimeMs = Date.now() - this.quizStartTime;
+
+    // 各問題の最初の回答時間の平均を計算
+    const firstResponseTimes = this.questionResults.map(
+      (q) => q.responseTimesMs[0] || 0
+    );
+    const averageResponseTimeMs =
+      firstResponseTimes.reduce((sum, time) => sum + time, 0) /
+      firstResponseTimes.length;
+
     return {
       courseName: this.courseName,
       completedAt: new Date().toISOString(),
       totalQuestions: this.questions.length,
       correctCount: this.correctCount,
       questions: this.questionResults,
+      averageResponseTimeMs: Math.round(averageResponseTimeMs),
+      totalTimeMs: Math.round(totalTimeMs),
     };
   }
 }
