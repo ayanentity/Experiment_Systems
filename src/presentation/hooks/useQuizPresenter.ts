@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Question, SingleNoteQuestion } from "../../domain/models/Question";
 import { QuizViewModel } from "../viewmodels/QuizViewModel";
 import { QuizPresenter } from "../presenters/QuizPresenter";
@@ -31,6 +31,41 @@ export function useQuizPresenter(
     [viewModel, audioPlayer]
   );
 
+  // 表示用のタイマー状態（残り時間）
+  const [questionStartAt, setQuestionStartAt] = useState<number>(() => Date.now());
+  const [now, setNow] = useState<number>(() => Date.now());
+
+  // ビューモデルから現在の状態を取得（依存関係用）
+  const state = viewModel.state;
+  const progress = viewModel.progress;
+  const currentQuestion = viewModel.currentQuestion;
+
+  // 問題が変わったら開始時刻をリセット
+  useEffect(() => {
+    setQuestionStartAt(Date.now());
+    setNow(Date.now());
+  }, [progress]);
+
+  // 残り時間更新用のインターバル
+  useEffect(() => {
+    if (state !== "answering") return;
+
+    const id = setInterval(() => {
+      setNow(Date.now());
+    }, 200);
+
+    return () => clearInterval(id);
+  }, [state, progress]);
+
+  // 制限時間（ミリ秒）を計算
+  const timeLimitMs =
+    "note" in currentQuestion
+      ? 5000
+      : currentQuestion.correctAnswer.length * 5000;
+
+  // 残り時間（ミリ秒）
+  const timeLeftMs = Math.max(0, timeLimitMs - (now - questionStartAt));
+
   // audio要素への参照を設定する関数
   const setAudioRef = useCallback(
     (note: MusicalNote, element: HTMLAudioElement | null) => {
@@ -50,6 +85,8 @@ export function useQuizPresenter(
     isMultiNote: viewModel.isMultiNote,
     isCompleted: viewModel.isCompleted,
     requiredAnswerCount: viewModel.requiredAnswerCount,
+    timeLimitMs,
+    timeLeftMs,
 
     // アクション
     handleNoteClick: (note: MusicalNote) => presenter.handleNoteClick(note),
