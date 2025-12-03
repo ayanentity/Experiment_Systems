@@ -65,6 +65,7 @@ export function QuizPlayer({
       [MusicalNote.MI]: "e",
       [MusicalNote.FA]: "f",
       [MusicalNote.SO]: "g",
+      [MusicalNote.C2]: "",
       [MusicalNote.REST]: "", // 使用しない
     };
     const base = map[note];
@@ -76,10 +77,23 @@ export function QuizPlayer({
   };
 
   // 表示する画像パスを決定
+  const getPhraseToneImagePath = (basePath: string) => {
+    if (!basePath.startsWith("/question/phrasetone/")) {
+      return basePath;
+    }
+    if (state === "answering") {
+      return basePath;
+    }
+    // /question/phrasetone/xxxx.png -> /question/phrasetoneAnswer/xxxx_answer.png
+    const filename = basePath.replace("/question/phrasetone/", "");
+    const name = filename.replace(".png", "");
+    return `/question/phrasetoneAnswer/${name}_answer.png`;
+  };
+
   const displayImageSrc =
     "note" in currentQuestion
       ? getSingleNoteImagePath(currentQuestion.note)
-      : currentQuestion.imagePath;
+      : getPhraseToneImagePath(currentQuestion.imagePath);
 
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-4xl">

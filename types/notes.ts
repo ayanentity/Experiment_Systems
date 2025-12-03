@@ -10,6 +10,7 @@ export enum MusicalNote {
   SO = "so",
   LA = "la",
   SI = "si",
+  C2 = "c2",
   REST = "rest", // 休符（無音）
 }
 
@@ -28,6 +29,7 @@ export const NOTE_CONFIG: Record<
   [MusicalNote.SO]: { label: "ソ", filename: "g.wav" },
   [MusicalNote.LA]: { label: "ラ", filename: "a.wav" },
   [MusicalNote.SI]: { label: "シ", filename: "b.wav" },
+  [MusicalNote.C2]: { label: "高いド", filename: "c2.wav" },
   [MusicalNote.REST]: { label: "休符", filename: "" }, // 休符は音声ファイルなし
 };
 
@@ -43,4 +45,5 @@ export const ALL_NOTES = [
   MusicalNote.SO,
   MusicalNote.LA,
   MusicalNote.SI,
+  MusicalNote.C2,
 ] as const;
