@@ -59,9 +59,15 @@ export function useQuizPresenter(
 
   // 制限時間（ミリ秒）を計算
   const timeLimitMs =
+    // 単音: 一律5秒
     "note" in currentQuestion
       ? 5000
-      : currentQuestion.correctAnswer.length * 5000;
+      : // 事前/事後テスト: 一律15秒
+      currentQuestion.id === "pre_practice_test" ||
+        currentQuestion.id === "post_practice_test"
+      ? 15000
+      : // 複音: 音の数 × 5秒
+        currentQuestion.correctAnswer.length * 5000;
 
   // 残り時間（ミリ秒）
   const timeLeftMs = Math.max(0, timeLimitMs - (now - questionStartAt));
