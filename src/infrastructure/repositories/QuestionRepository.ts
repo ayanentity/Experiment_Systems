@@ -222,3 +222,73 @@ export class FinalQuestionRepository {
     return this.question;
   }
 }
+
+/**
+ * 事前テスト用問題リポジトリ
+ */
+export class PrePracticeTestQuestionRepository {
+  private question: Question = {
+    id: "pre_practice_test",
+    imagePath: "/question/test/pre_practice_test.png",
+    // c→e→f→g→e→g→g→f→g→a→f→a→b→c2→a
+    correctAnswer: [
+      MusicalNote.DO,
+      MusicalNote.MI,
+      MusicalNote.FA,
+      MusicalNote.SO,
+      MusicalNote.MI,
+      MusicalNote.SO,
+      MusicalNote.SO,
+      MusicalNote.FA,
+      MusicalNote.SO,
+      MusicalNote.LA,
+      MusicalNote.FA,
+      MusicalNote.LA,
+      MusicalNote.SI,
+      MusicalNote.C2,
+      MusicalNote.LA,
+    ],
+    // テストでは回答後に音を鳴らさない仕様のため、再生シーケンスは空配列
+    playbackSequence: [],
+    description: "事前テスト",
+  };
+
+  get(): Question {
+    return this.question;
+  }
+}
+
+/**
+ * 事後テスト用問題リポジトリ
+ */
+export class PostPracticeTestQuestionRepository {
+  private question: Question = {
+    id: "post_practice_test",
+    imagePath: "/question/test/post_practice_test.png",
+    // g→g→a→b→c2→a→c→f→g→a→f→e→f→g→e
+    correctAnswer: [
+      MusicalNote.SO,
+      MusicalNote.SO,
+      MusicalNote.LA,
+      MusicalNote.SI,
+      MusicalNote.C2,
+      MusicalNote.LA,
+      MusicalNote.DO,
+      MusicalNote.FA,
+      MusicalNote.SO,
+      MusicalNote.LA,
+      MusicalNote.FA,
+      MusicalNote.MI,
+      MusicalNote.FA,
+      MusicalNote.SO,
+      MusicalNote.MI,
+    ],
+    // テストでは回答後に音を鳴らさない仕様のため、再生シーケンスは空配列
+    playbackSequence: [],
+    description: "事後テスト",
+  };
+
+  get(): Question {
+    return this.question;
+  }
+}

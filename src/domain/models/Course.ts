@@ -6,6 +6,8 @@ export enum CourseType {
   SINGLE = "single",
   MULTIPLE = "multiple",
   FINAL = "final",
+  PRE_TEST = "pre-test",
+  POST_TEST = "post-test",
 }
 
 /**

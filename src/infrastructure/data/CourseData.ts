@@ -5,6 +5,12 @@ import { Course, CourseType } from "../../domain/models/Course";
  */
 export const COURSES: Course[] = [
   {
+    id: CourseType.PRE_TEST,
+    name: "事前テスト",
+    questionCount: 1,
+    path: "/pre-test",
+  },
+  {
     id: CourseType.BASIC,
     name: "基礎コース",
     questionCount: 14,
@@ -27,5 +33,11 @@ export const COURSES: Course[] = [
     name: "最終コース",
     questionCount: 1,
     path: "/final",
+  },
+  {
+    id: CourseType.POST_TEST,
+    name: "事後テスト",
+    questionCount: 1,
+    path: "/post-test",
   },
 ];

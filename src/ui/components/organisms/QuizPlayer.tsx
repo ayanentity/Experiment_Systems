@@ -21,6 +21,8 @@ interface QuizPlayerProps {
   questions: Question[] | SingleNoteQuestion[];
   courseName: string;
   onComplete: () => void;
+  /** 各問題ごとの正誤表示を隠す（テスト用） */
+  hideResult?: boolean;
 }
 
 /**
@@ -30,6 +32,7 @@ export function QuizPlayer({
   questions,
   courseName,
   onComplete,
+  hideResult = false,
 }: QuizPlayerProps) {
   const {
     currentQuestion,
@@ -153,12 +156,14 @@ export function QuizPlayer({
           </div>
         )}
 
-        {/* 結果表示 */}
-        <ResultDisplay
-          state={state}
-          userAnswer={userAnswer}
-          correctAnswer={correctAnswer}
-        />
+        {/* 結果表示（テストモードでは非表示） */}
+        {!hideResult && (
+          <ResultDisplay
+            state={state}
+            userAnswer={userAnswer}
+            correctAnswer={correctAnswer}
+          />
+        )}
       </div>
 
       {/* 音階ボタン */}
