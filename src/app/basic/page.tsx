@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { QuizPlayer } from "@/src/ui/components/organisms/QuizPlayer";
@@ -14,6 +15,7 @@ import { QuizResult } from "@/src/domain/models/QuizResult";
  * 全14問、7つの音階が各2回ずつ順不同で出題
  */
 export default function BasicCoursePage() {
+  const router = useRouter();
   const [isCompleted, setIsCompleted] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
@@ -45,7 +47,16 @@ export default function BasicCoursePage() {
 
   // クイズ完了後の結果画面
   if (isCompleted && quizResult) {
-    return <QuizResultView result={quizResult} onRetry={handleRetry} />;
+    return (
+      <QuizResultView 
+        result={quizResult} 
+        onRetry={handleRetry}
+        onNext={() => {
+          router.push("/practice/select");
+        }}
+        nextLabel="練習コース選択へ"
+      />
+    );
   }
 
   // クイズプレイ画面
@@ -58,11 +69,6 @@ export default function BasicCoursePage() {
           onComplete={handleComplete}
         />
 
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            コース選択に戻る
-          </Button>
-        </Link>
       </main>
     </div>
   );

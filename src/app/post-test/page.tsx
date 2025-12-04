@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { QuizPlayer } from "@/src/ui/components/organisms/QuizPlayer";
@@ -14,6 +15,7 @@ import { QuizResult } from "@/src/domain/models/QuizResult";
  * 1問のみの長いフレーズ
  */
 export default function PostPracticeTestPage() {
+  const router = useRouter();
   const [isCompleted, setIsCompleted] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
@@ -45,7 +47,16 @@ export default function PostPracticeTestPage() {
 
   // 結果表示画面（テスト成績）
   if (isCompleted && showResult && quizResult) {
-    return <QuizResultView result={quizResult} onRetry={handleRetry} />;
+    return (
+      <QuizResultView 
+        result={quizResult} 
+        onRetry={handleRetry}
+        onNext={() => {
+          router.push("/results");
+        }}
+        nextLabel="結果一覧を見る"
+      />
+    );
   }
 
   // テスト完了後のメッセージ画面（正誤は見せない）
@@ -66,9 +77,9 @@ export default function PostPracticeTestPage() {
             <Button onClick={() => setShowResult(true)} size="lg">
               結果を見る（テスト成績）
             </Button>
-            <Link href="/">
-              <Button variant="outline" size="lg">
-                コース選択に戻る
+            <Link href="/results">
+              <Button variant="default" size="lg">
+                結果一覧を見る
               </Button>
             </Link>
           </div>
@@ -95,11 +106,6 @@ export default function PostPracticeTestPage() {
           hideResult
         />
 
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            コース選択に戻る
-          </Button>
-        </Link>
       </main>
     </div>
   );

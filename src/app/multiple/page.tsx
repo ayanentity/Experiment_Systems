@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { QuizPlayer } from "@/src/ui/components/organisms/QuizPlayer";
@@ -14,6 +15,7 @@ import { QuizResult } from "@/src/domain/models/QuizResult";
  * 全21問、2〜4音の複音問題、休符あり
  */
 export default function MultipleCoursePage() {
+  const router = useRouter();
   const [isCompleted, setIsCompleted] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
@@ -43,7 +45,16 @@ export default function MultipleCoursePage() {
 
   // クイズ完了後の結果画面
   if (isCompleted && quizResult) {
-    return <QuizResultView result={quizResult} onRetry={handleRetry} />;
+    return (
+      <QuizResultView 
+        result={quizResult} 
+        onRetry={handleRetry}
+        onNext={() => {
+          router.push("/post-test/wait");
+        }}
+        nextLabel="事後テストへ"
+      />
+    );
   }
 
   // クイズプレイ画面
@@ -56,11 +67,6 @@ export default function MultipleCoursePage() {
           onComplete={handleComplete}
         />
 
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            コース選択に戻る
-          </Button>
-        </Link>
       </main>
     </div>
   );

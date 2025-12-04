@@ -8,6 +8,8 @@ import { NOTE_CONFIG } from "../../../domain/models/MusicalNote";
 interface QuizResultViewProps {
   result: QuizResult;
   onRetry: () => void;
+  onNext?: () => void;
+  nextLabel?: string;
 }
 
 /**
@@ -21,7 +23,7 @@ function formatTime(ms: number): string {
 /**
  * クイズ結果表示コンポーネント
  */
-export function QuizResultView({ result, onRetry }: QuizResultViewProps) {
+export function QuizResultView({ result, onRetry, onNext, nextLabel = "次へ進む" }: QuizResultViewProps) {
   const {
     courseName,
     totalQuestions,
@@ -171,11 +173,17 @@ export function QuizResultView({ result, onRetry }: QuizResultViewProps) {
           <Button onClick={onRetry} size="lg">
             もう一度挑戦
           </Button>
-          <Link href="/">
-            <Button variant="outline" size="lg">
-              コース選択に戻る
+          {onNext ? (
+            <Button onClick={onNext} variant="default" size="lg">
+              {nextLabel}
             </Button>
-          </Link>
+          ) : (
+            <Link href="/">
+              <Button variant="outline" size="lg">
+                コース選択に戻る
+              </Button>
+            </Link>
+          )}
         </div>
       </main>
     </div>

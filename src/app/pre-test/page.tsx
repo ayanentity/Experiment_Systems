@@ -66,9 +66,9 @@ export default function PrePracticeTestPage() {
             <Button onClick={() => setShowResult(true)} size="lg">
               結果を見る（テスト成績）
             </Button>
-            <Link href="/">
+            <Link href="/pre-test/complete">
               <Button variant="outline" size="lg">
-                コース選択に戻る
+                次へ進む
               </Button>
             </Link>
           </div>
@@ -95,11 +95,6 @@ export default function PrePracticeTestPage() {
           hideResult
         />
 
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            コース選択に戻る
-          </Button>
-        </Link>
       </main>
     </div>
   );
