@@ -29,12 +29,6 @@ export const COURSES: Course[] = [
     path: "/multiple",
   },
   {
-    id: CourseType.FINAL,
-    name: "最終コース",
-    questionCount: 1,
-    path: "/final",
-  },
-  {
     id: CourseType.POST_TEST,
     name: "事後テスト",
     questionCount: 1,
