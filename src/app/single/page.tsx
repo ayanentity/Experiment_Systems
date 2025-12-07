@@ -12,7 +12,7 @@ import { QuizResult } from "@/src/domain/models/QuizResult";
 
 /**
  * 単音コースページ
- * 全21問、7つの音階が各3回ずつ順不同で出題
+ * 全24問、8つの音階（DO, RE, MI, FA, SO, LA, SI, C2）が各3回ずつ順不同で出題
  */
 export default function SingleCoursePage() {
   const router = useRouter();
@@ -48,8 +48,8 @@ export default function SingleCoursePage() {
   // クイズ完了後の結果画面
   if (isCompleted && quizResult) {
     return (
-      <QuizResultView 
-        result={quizResult} 
+      <QuizResultView
+        result={quizResult}
         onRetry={handleRetry}
         onNext={() => {
           router.push("/post-test/wait");
@@ -68,7 +68,6 @@ export default function SingleCoursePage() {
           courseName={courseName}
           onComplete={handleComplete}
         />
-
       </main>
     </div>
   );

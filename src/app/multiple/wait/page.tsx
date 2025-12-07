@@ -16,7 +16,7 @@ export default function MultipleWaitPage() {
             複音コース
           </h1>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            2〜4音のフレーズを練習します（全21問）
+            2〜4音のフレーズを練習します（全20問）
           </p>
         </div>
 

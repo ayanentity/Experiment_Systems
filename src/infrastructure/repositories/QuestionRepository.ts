@@ -25,7 +25,7 @@ export class SingleNoteQuestionRepository {
         [MusicalNote.MI]: "e",
         [MusicalNote.FA]: "f",
         [MusicalNote.SO]: "g",
-        [MusicalNote.C2]: "",
+        [MusicalNote.C2]: "c2",
         [MusicalNote.REST]: "", // 休符は単音問題では使用しない
       };
       const filename = map[note];

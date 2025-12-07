@@ -36,6 +36,7 @@ export class GenerateSingleNoteQuestionsUseCase {
       MusicalNote.SO,
       MusicalNote.LA,
       MusicalNote.SI,
+      MusicalNote.C2,
     ];
 
     notes.forEach((note) => {

@@ -30,7 +30,7 @@ export default function PracticeSelectPage() {
                   単音コース
                 </h2>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  21問（各音階3回ずつ）
+                  24問（各音階3回ずつ）
                 </p>
                 <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-2">
                   1音ずつ順番に答える練習
@@ -47,7 +47,7 @@ export default function PracticeSelectPage() {
                   複音コース
                 </h2>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  21問（2〜4音のフレーズ）
+                  20問（2〜4音のフレーズ）
                 </p>
                 <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-2">
                   複数の音を順番に答える練習
@@ -60,7 +60,3 @@ export default function PracticeSelectPage() {
     </div>
   );
 }
-
-
-
-
