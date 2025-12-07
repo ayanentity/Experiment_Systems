@@ -13,19 +13,28 @@ export class QuizPresenter {
 
   constructor(
     private viewModel: QuizViewModel,
-    private audioPlayer: AudioPlayer
+    private audioPlayer: AudioPlayer,
+    private courseName: string
   ) {
-    // 初期問題の制限時間タイマーを開始
-    this.startTimeoutForCurrentQuestion();
+    // 初期問題の制限時間タイマーを開始（基礎コース以外）
+    if (this.courseName !== "基礎コース") {
+      this.startTimeoutForCurrentQuestion();
+    }
   }
 
   /**
    * 現在の問題に対する制限時間（ミリ秒）を取得
+   * 基礎コース: 制限なし（Infinity）
    * 単音: 一律 5秒
    * 複音: 音の数 × 5秒（2音:10秒, 3音:15秒, 4音:20秒, ...）
    * 事前/事後テスト: 一律 15秒
    */
   private getTimeLimitMs(question: Question | SingleNoteQuestion): number {
+    // 基礎コースは制限時間なし
+    if (this.courseName === "基礎コース") {
+      return Infinity;
+    }
+
     // テスト用問題は一律15秒
     if (!("note" in question)) {
       if (
@@ -48,9 +57,19 @@ export class QuizPresenter {
    * 現在の問題用のタイマーを開始
    */
   private startTimeoutForCurrentQuestion() {
+    // 基礎コースはタイマーを開始しない
+    if (this.courseName === "基礎コース") {
+      return;
+    }
+
     this.clearTimeoutIfNeeded();
     const question = this.viewModel.currentQuestion;
     const limitMs = this.getTimeLimitMs(question);
+
+    // 制限時間が無限大の場合はタイマーを開始しない
+    if (limitMs === Infinity) {
+      return;
+    }
 
     this.timeoutId = setTimeout(() => {
       this.handleTimeout();
@@ -104,7 +123,9 @@ export class QuizPresenter {
     this.viewModel.addAnswer(note);
 
     // 必要な音数に達したら自動採点
-    if (this.viewModel.userAnswer.length === this.viewModel.requiredAnswerCount) {
+    if (
+      this.viewModel.userAnswer.length === this.viewModel.requiredAnswerCount
+    ) {
       this.checkAnswer();
     }
   }
@@ -167,8 +188,8 @@ export class QuizPresenter {
    */
   handleNext() {
     this.viewModel.nextQuestion();
-    // 次の問題のタイマーを開始
-    if (!this.viewModel.isCompleted) {
+    // 次の問題のタイマーを開始（基礎コース以外）
+    if (!this.viewModel.isCompleted && this.courseName !== "基礎コース") {
       this.startTimeoutForCurrentQuestion();
     }
   }

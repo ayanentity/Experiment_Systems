@@ -27,12 +27,14 @@ export function useQuizPresenter(
 
   // プレゼンターを作成
   const presenter = useMemo(
-    () => new QuizPresenter(viewModel, audioPlayer),
-    [viewModel, audioPlayer]
+    () => new QuizPresenter(viewModel, audioPlayer, courseName),
+    [viewModel, audioPlayer, courseName]
   );
 
   // 表示用のタイマー状態（残り時間）
-  const [questionStartAt, setQuestionStartAt] = useState<number>(() => Date.now());
+  const [questionStartAt, setQuestionStartAt] = useState<number>(() =>
+    Date.now()
+  );
   const [now, setNow] = useState<number>(() => Date.now());
 
   // ビューモデルから現在の状態を取得（依存関係用）
@@ -59,8 +61,11 @@ export function useQuizPresenter(
 
   // 制限時間（ミリ秒）を計算
   const timeLimitMs =
-    // 単音: 一律5秒
-    "note" in currentQuestion
+    // 基礎コース: 制限なし
+    courseName === "基礎コース"
+      ? Infinity
+      : // 単音: 一律5秒
+      "note" in currentQuestion
       ? 5000
       : // 事前/事後テスト: 一律15秒
       currentQuestion.id === "pre_practice_test" ||
@@ -70,7 +75,10 @@ export function useQuizPresenter(
         currentQuestion.correctAnswer.length * 5000;
 
   // 残り時間（ミリ秒）
-  const timeLeftMs = Math.max(0, timeLimitMs - (now - questionStartAt));
+  const timeLeftMs =
+    timeLimitMs === Infinity
+      ? Infinity
+      : Math.max(0, timeLimitMs - (now - questionStartAt));
 
   // audio要素への参照を設定する関数
   const setAudioRef = useCallback(

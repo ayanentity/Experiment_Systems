@@ -100,8 +100,10 @@ export function QuizPlayer({
       ? getSingleNoteImagePath(currentQuestion.note)
       : getPhraseToneImagePath(currentQuestion.imagePath);
 
-  const totalSeconds = Math.round(timeLimitMs / 1000);
-  const leftSeconds = Math.max(0, Math.ceil(timeLeftMs / 1000));
+  const totalSeconds =
+    timeLimitMs === Infinity ? null : Math.round(timeLimitMs / 1000);
+  const leftSeconds =
+    timeLeftMs === Infinity ? null : Math.max(0, Math.ceil(timeLeftMs / 1000));
 
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
@@ -113,10 +115,12 @@ export function QuizPlayer({
         correctCount={correctCount}
       />
 
-      {/* 残り時間表示 */}
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        残り時間: {leftSeconds} / {totalSeconds} 秒
-      </p>
+      {/* 残り時間表示（基礎コース以外） */}
+      {timeLimitMs !== Infinity && (
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          残り時間: {leftSeconds} / {totalSeconds} 秒
+        </p>
+      )}
 
       {/* 問題画像と状態表示 */}
       <div className="flex flex-col items-center gap-6 w-full">
