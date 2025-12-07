@@ -101,6 +101,7 @@ export function useQuizPresenter(
     requiredAnswerCount: viewModel.requiredAnswerCount,
     timeLimitMs,
     timeLeftMs,
+    isPlayingAudio: viewModel.isPlayingAudio,
 
     // アクション
     handleNoteClick: (note: MusicalNote) => presenter.handleNoteClick(note),

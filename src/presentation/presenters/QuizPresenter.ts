@@ -174,12 +174,20 @@ export class QuizPresenter {
   private async playCorrectAnswer() {
     const question = this.viewModel.currentQuestion;
 
-    if ("note" in question) {
-      // SingleNoteQuestion
-      this.audioPlayer.playNote(question.note);
-    } else {
-      // Question (複音)
-      await this.audioPlayer.playSequence(question.playbackSequence);
+    // 再生開始を通知
+    this.viewModel.setIsPlayingAudio(true);
+
+    try {
+      if ("note" in question) {
+        // SingleNoteQuestion
+        await this.audioPlayer.playNote(question.note);
+      } else {
+        // Question (複音) - 間隔なしで連続再生
+        await this.audioPlayer.playSequence(question.playbackSequence, 0);
+      }
+    } finally {
+      // 再生終了を通知
+      this.viewModel.setIsPlayingAudio(false);
     }
   }
 

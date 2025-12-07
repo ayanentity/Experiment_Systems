@@ -1,5 +1,9 @@
 import { MusicalNote } from "../../domain/models/MusicalNote";
-import { Question, QuizState, SingleNoteQuestion } from "../../domain/models/Question";
+import {
+  Question,
+  QuizState,
+  SingleNoteQuestion,
+} from "../../domain/models/Question";
 import { QuizResult, QuestionResult } from "../../domain/models/QuizResult";
 
 /**
@@ -16,6 +20,8 @@ export class QuizViewModel {
   correctCount: number = 0;
   // クイズ完了フラグ
   isCompleted: boolean = false;
+  // 音声再生中フラグ
+  isPlayingAudio: boolean = false;
   // 各問題の回答履歴
   private questionResults: QuestionResult[] = [];
   // 時間測定用
@@ -77,9 +83,10 @@ export class QuizViewModel {
   addAnswer(note: MusicalNote) {
     // 回答時間を記録
     const now = Date.now();
-    const timeFromStart = this.lastAnswerTime === 0
-      ? now - this.questionStartTime  // 1つ目の回答: 問題開始からの時間
-      : now - this.lastAnswerTime;    // 2つ目以降: 前回の回答からの時間
+    const timeFromStart =
+      this.lastAnswerTime === 0
+        ? now - this.questionStartTime // 1つ目の回答: 問題開始からの時間
+        : now - this.lastAnswerTime; // 2つ目以降: 前回の回答からの時間
 
     this.currentResponseTimes.push(timeFromStart);
     this.lastAnswerTime = now;
@@ -104,6 +111,14 @@ export class QuizViewModel {
    */
   setState(state: QuizState) {
     this.state = state;
+    this.onStateChange();
+  }
+
+  /**
+   * 音声再生状態を更新
+   */
+  setIsPlayingAudio(isPlaying: boolean) {
+    this.isPlayingAudio = isPlaying;
     this.onStateChange();
   }
 
