@@ -51,6 +51,17 @@ export class QuizViewModel {
   get requiredAnswerCount(): number {
     const question = this.currentQuestion;
     if ("correctAnswer" in question) {
+      // bagf.pngの問題は確実に4音必要
+      if (question.imagePath?.includes("bagf.png")) {
+        // 念のため、correctAnswer.lengthも確認
+        const actualLength = question.correctAnswer.length;
+        if (actualLength !== 4) {
+          console.error(
+            `bagf.png question has incorrect correctAnswer.length: ${actualLength}, expected 4`
+          );
+        }
+        return 4;
+      }
       return question.correctAnswer.length;
     }
     return 1; // SingleNoteQuestion
