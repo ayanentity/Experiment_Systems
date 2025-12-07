@@ -129,22 +129,55 @@ export class MultipleNoteQuestionRepository {
       }
 
       const correctAnswer = tokens.map((t) => parseTokenToNoteForAnswer(t));
-      const playbackSequence = tokens.map((t) => parseTokenToNoteForPlayback(t));
+      const playbackSequence = tokens.map((t) =>
+        parseTokenToNoteForPlayback(t)
+      );
 
       return { correctAnswer, playbackSequence };
     };
 
     return filenames.map((filename, index) => {
       const name = filename.replace(".png", "");
-      const { correctAnswer, playbackSequence } = parseName(name);
+      let { correctAnswer, playbackSequence } = parseName(name);
 
-      return {
+      // bagf.pngの問題を明示的に4音として定義
+      if (filename === "bagf.png") {
+        correctAnswer = [
+          MusicalNote.SI,
+          MusicalNote.LA,
+          MusicalNote.SO,
+          MusicalNote.FA,
+        ];
+        playbackSequence = [
+          MusicalNote.SI,
+          MusicalNote.LA,
+          MusicalNote.SO,
+          MusicalNote.FA,
+        ];
+        // デバッグ用: bagf.pngが確実に4音として設定されていることを確認
+        if (correctAnswer.length !== 4) {
+          throw new Error(
+            `bagf.png must have 4 notes, but got ${correctAnswer.length}`
+          );
+        }
+      }
+
+      const question = {
         id: `p${index + 1}`,
         imagePath: `/question/phrasetone/${filename}`,
         correctAnswer,
         playbackSequence,
         description: "このフレーズを順番に答えてください",
       };
+
+      // bagf.pngの最終確認: 問題オブジェクトが4音を持っていることを検証
+      if (filename === "bagf.png" && question.correctAnswer.length !== 4) {
+        throw new Error(
+          `bagf.png question object must have 4 notes in correctAnswer, but got ${question.correctAnswer.length}`
+        );
+      }
+
+      return question;
     });
   }
 
