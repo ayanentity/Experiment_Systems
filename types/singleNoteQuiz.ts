@@ -23,7 +23,7 @@ export const SINGLE_NOTE_IMAGES: Record<MusicalNote, string> = {
   [MusicalNote.SO]: "/images/single/so.png",
   [MusicalNote.LA]: "/images/single/la.png",
   [MusicalNote.SI]: "/images/single/si.png",
-  [MusicalNote.C2]: "",
+  [MusicalNote.C2]: "/question/singletone/c2.png",
   [MusicalNote.REST]: "", // 単音問題では使用しない
 };
 

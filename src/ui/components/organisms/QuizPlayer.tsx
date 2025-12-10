@@ -70,7 +70,7 @@ export function QuizPlayer({
       [MusicalNote.MI]: "e",
       [MusicalNote.FA]: "f",
       [MusicalNote.SO]: "g",
-      [MusicalNote.C2]: "",
+      [MusicalNote.C2]: "c2",
       [MusicalNote.REST]: "", // 使用しない
     };
     const base = map[note];
