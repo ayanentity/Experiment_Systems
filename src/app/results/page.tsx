@@ -7,6 +7,51 @@ import { QuizResultRepository } from "@/src/infrastructure/storage/QuizResultRep
 import { QuizResult } from "@/src/domain/models/QuizResult";
 
 /**
+ * CSVダウンロード関数
+ */
+async function downloadCSV(results: QuizResult[]) {
+  try {
+    const response = await fetch("/result_to_csv", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(results),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to generate CSV");
+    }
+
+    // レスポンスからBlobを取得
+    const blob = await response.blob();
+
+    // Content-Dispositionヘッダーからファイル名を取得
+    const contentDisposition = response.headers.get("Content-Disposition");
+    let filename = "quiz_results.csv";
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="(.+)"/);
+      if (match) {
+        filename = match[1];
+      }
+    }
+
+    // ダウンロードリンクを作成してクリック
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("CSV download failed:", error);
+    alert("CSVのダウンロードに失敗しました");
+  }
+}
+
+/**
  * 結果一覧画面
  */
 export default function ResultsPage() {
@@ -136,6 +181,15 @@ export default function ResultsPage() {
               最初からやり直す
             </Button>
           </Link>
+          {sortedResults.length > 0 && (
+            <Button
+              variant="default"
+              size="lg"
+              onClick={() => downloadCSV(sortedResults)}
+            >
+              CSVダウンロード
+            </Button>
+          )}
         </div>
       </main>
     </div>
