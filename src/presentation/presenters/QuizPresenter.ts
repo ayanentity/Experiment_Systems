@@ -10,6 +10,8 @@ import { QuizViewModel } from "../viewmodels/QuizViewModel";
 export class QuizPresenter {
   private answerUseCase = new AnswerQuestionUseCase();
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
+  // タイマー開始時の問題インデックスを保存（古いタイマーの誤発火防止用）
+  private timeoutQuestionIndex: number = -1;
 
   constructor(
     private viewModel: QuizViewModel,
@@ -66,10 +68,21 @@ export class QuizPresenter {
     const question = this.viewModel.currentQuestion;
     const limitMs = this.getTimeLimitMs(question);
 
+    // デバッグログ
+    console.log("[startTimeoutForCurrentQuestion]", {
+      question,
+      limitMs,
+      correctAnswerLength:
+        "correctAnswer" in question ? question.correctAnswer.length : 1,
+    });
+
     // 制限時間が無限大の場合はタイマーを開始しない
     if (limitMs === Infinity) {
       return;
     }
+
+    // タイマー開始時の問題インデックスを保存
+    this.timeoutQuestionIndex = this.viewModel.currentQuestionIndex;
 
     this.timeoutId = setTimeout(() => {
       this.handleTimeout();
@@ -92,6 +105,21 @@ export class QuizPresenter {
    * 正解のフレーズを再生する
    */
   private handleTimeout() {
+    // デバッグログ
+    console.log("[handleTimeout] called", {
+      state: this.viewModel.state,
+      currentQuestion: this.viewModel.currentQuestion,
+      userAnswerLength: this.viewModel.userAnswer.length,
+      timeoutQuestionIndex: this.timeoutQuestionIndex,
+      currentQuestionIndex: this.viewModel.currentQuestionIndex,
+    });
+
+    // 古いタイマーが発火した場合は無視（問題が既に変わっている）
+    if (this.timeoutQuestionIndex !== this.viewModel.currentQuestionIndex) {
+      console.log("[handleTimeout] Ignoring stale timeout for old question");
+      return;
+    }
+
     // 既に回答済みなら何もしない
     if (this.viewModel.state !== "answering") return;
 
@@ -114,6 +142,15 @@ export class QuizPresenter {
    * 音階ボタンがクリックされた時の処理
    */
   handleNoteClick(note: MusicalNote) {
+    // デバッグログ
+    console.log("[handleNoteClick] called", {
+      note,
+      state: this.viewModel.state,
+      currentQuestion: this.viewModel.currentQuestion,
+      userAnswerLength: this.viewModel.userAnswer.length,
+      requiredAnswerCount: this.viewModel.requiredAnswerCount,
+    });
+
     // 回答中以外はクリック無効
     if (this.viewModel.state !== "answering") return;
 
@@ -201,6 +238,9 @@ export class QuizPresenter {
    * 次の問題に進む
    */
   handleNext() {
+    // 念のため古いタイマーをクリア
+    this.clearTimeoutIfNeeded();
+
     this.viewModel.nextQuestion();
     // 次の問題のタイマーを開始（基礎コース以外）
     if (!this.viewModel.isCompleted && this.courseName !== "基礎コース") {
