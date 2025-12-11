@@ -46,6 +46,7 @@ export function QuizPlayer({
     requiredAnswerCount,
     timeLimitMs,
     timeLeftMs,
+    isPlayingAudio,
     handleNoteClick,
     handleNext,
     handleReset,
@@ -195,6 +196,7 @@ export function QuizPlayer({
               }
             }}
             size="lg"
+            disabled={isPlayingAudio}
           >
             {progress < total ? "次の問題" : "結果を見る"}
           </Button>

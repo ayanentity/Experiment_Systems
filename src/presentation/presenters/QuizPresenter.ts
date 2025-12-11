@@ -27,7 +27,7 @@ export class QuizPresenter {
    * 基礎コース: 制限なし（Infinity）
    * 単音: 一律 5秒
    * 複音: 音の数 × 5秒（2音:10秒, 3音:15秒, 4音:20秒, ...）
-   * 事前/事後テスト: 一律 15秒
+   * 事前/事後テスト: 一律 45秒
    */
   private getTimeLimitMs(question: Question | SingleNoteQuestion): number {
     // 基礎コースは制限時間なし
@@ -35,13 +35,13 @@ export class QuizPresenter {
       return Infinity;
     }
 
-    // テスト用問題は一律15秒
+    // テスト用問題は一律45秒
     if (!("note" in question)) {
       if (
         question.id === "pre_practice_test" ||
         question.id === "post_practice_test"
       ) {
-        return 15000;
+        return 45000;
       }
     }
 

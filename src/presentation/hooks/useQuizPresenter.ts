@@ -67,10 +67,10 @@ export function useQuizPresenter(
       : // 単音: 一律5秒
       "note" in currentQuestion
       ? 5000
-      : // 事前/事後テスト: 一律15秒
+      : // 事前/事後テスト: 一律45秒
       currentQuestion.id === "pre_practice_test" ||
         currentQuestion.id === "post_practice_test"
-      ? 15000
+      ? 45000
       : // 複音: 音の数 × 5秒
         currentQuestion.correctAnswer.length * 5000;
 
