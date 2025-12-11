@@ -140,8 +140,9 @@ export class MultipleNoteQuestionRepository {
       const name = filename.replace(".png", "");
       let { correctAnswer, playbackSequence } = parseName(name);
 
-      // bagf.pngの問題を明示的に4音として定義
-      if (filename === "bagf.png") {
+      // 4音の問題を明示的に定義（ファイル名に基づく）
+      // bagf, baga, ggfd, ffdd, egaf, egcd, eded, ccee, cdcd, cdef などの4文字問題
+      if (name === "bagf") {
         correctAnswer = [
           MusicalNote.SI,
           MusicalNote.LA,
@@ -154,12 +155,19 @@ export class MultipleNoteQuestionRepository {
           MusicalNote.SO,
           MusicalNote.FA,
         ];
-        // デバッグ用: bagf.pngが確実に4音として設定されていることを確認
-        if (correctAnswer.length !== 4) {
-          throw new Error(
-            `bagf.png must have 4 notes, but got ${correctAnswer.length}`
-          );
-        }
+      } else if (name === "baga") {
+        correctAnswer = [
+          MusicalNote.SI,
+          MusicalNote.LA,
+          MusicalNote.SO,
+          MusicalNote.LA,
+        ];
+        playbackSequence = [
+          MusicalNote.SI,
+          MusicalNote.LA,
+          MusicalNote.SO,
+          MusicalNote.LA,
+        ];
       }
 
       const question = {
@@ -169,13 +177,6 @@ export class MultipleNoteQuestionRepository {
         playbackSequence,
         description: "このフレーズを順番に答えてください",
       };
-
-      // bagf.pngの最終確認: 問題オブジェクトが4音を持っていることを検証
-      if (filename === "bagf.png" && question.correctAnswer.length !== 4) {
-        throw new Error(
-          `bagf.png question object must have 4 notes in correctAnswer, but got ${question.correctAnswer.length}`
-        );
-      }
 
       return question;
     });
