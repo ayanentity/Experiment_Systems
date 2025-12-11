@@ -101,6 +101,9 @@ export class QuizPresenter {
     // タイマーはここで完了扱いにする
     this.timeoutId = null;
 
+    // 正誤判定直後から「次の問題へ」ボタンを無効化（音声再生完了まで）
+    this.viewModel.setIsPlayingAudio(true);
+
     // 1秒後に正解の音声を再生
     setTimeout(() => {
       this.playCorrectAnswer();
@@ -161,6 +164,9 @@ export class QuizPresenter {
 
     // 回答結果を記録
     this.viewModel.recordCurrentQuestionResult(result.isCorrect);
+
+    // 正誤判定直後から「次の問題へ」ボタンを無効化（音声再生完了まで）
+    this.viewModel.setIsPlayingAudio(true);
 
     // 正解音声を再生
     setTimeout(() => {
