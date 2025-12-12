@@ -41,9 +41,3 @@ export default function BasicWaitPage() {
     </div>
   );
 }
-
-
-
-
-
-

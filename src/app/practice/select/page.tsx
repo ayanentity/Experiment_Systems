@@ -60,7 +60,3 @@ export default function PracticeSelectPage() {
     </div>
   );
 }
-
-
-
-
